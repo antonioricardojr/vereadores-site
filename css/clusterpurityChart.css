@@ -1,0 +1,9 @@
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+#chart{
+  text-align: center;
+  width: 60%;
+  height: 700px;
+}

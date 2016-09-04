@@ -1,0 +1,10 @@
+---
+title:  "A Câmara."
+subtitle: "O que os vereadores andam votando na câmara."
+author: "Wferr"
+avatar: "img/authors/wferr.png"
+image: "img/vereador.jpg"
+date:   2016-09-04 12:12:12
+---
+
+{% include clusteringChart.html %}
