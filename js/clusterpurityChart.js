@@ -1,29 +1,29 @@
 var obj;
 
-var ultimoAFazer = "tipo";
-d3.json('sumario.json',function(error,data){
-	var quantNos = data[ultimoAFazer][0]["values"].length;
-	obj = d3.clusterpuritychart().containerID('chart').noOfCategories(quantNos);
-	d3.select('#chart').append('svg').datum(data[ultimoAFazer]).call(obj);
-});
+var ultimoAFazer = "";
+var ultimoIgnorarRequerimento;
 
-document.getElementById("aFazeres").onclick = function() {
-    var aFazeres = document.getElementById("aFazeres");
+refazSvg = function() {
+    var aFazeres = document.getElementById("aFazeresCluster");
+    var ignorarRequerimentos = document.getElementById("ignorarRequerimentos").checked;
 
-    if(aFazeres.options[aFazeres.selectedIndex].value != ultimoAFazer){
+    if(aFazeres.options[aFazeres.selectedIndex].value != ultimoAFazer || ignorarRequerimentos != ultimoIgnorarRequerimento){
+    	ultimoIgnorarRequerimento = ignorarRequerimentos;
     	ultimoAFazer = aFazeres.options[aFazeres.selectedIndex].value;
-    	d3.select("#chart").selectAll("*").remove();
+    	d3.select("#cluster").selectAll("*").remove();
       
+      	//criar filtro
     	d3.json('sumario.json',function(error,data){
-    		var quantNos = data[ultimoAFazer][0]["values"].length;
-			obj = d3.clusterpuritychart().containerID('chart').noOfCategories(quantNos);
-			d3.select('#chart').append('svg').datum(data[ultimoAFazer]).call(obj);
+			var quantNos = data[ultimoAFazer][0]["values"].length;
+			obj = clusterchart().containerID('cluster').noOfCategories(quantNos);
+			d3.select('#cluster').append('svg').datum(data[ultimoAFazer]).call(obj);
 		});
+
     }
 };
+refazSvg();
 
-
-d3.clusterpuritychart = function(){
+clusterchart = function(){
 
 	var containerID,
 		width,
@@ -34,7 +34,7 @@ d3.clusterpuritychart = function(){
 		innerRadius =0,eleInRow,noOfCategories,
 		colorScale = d3.scale.category10(),
 		radiusScale = d3.scale.linear(),
-		legendObj = d3.legend(),
+		legendObj = legend(),
 		scale_temp =  d3.scale.linear(),
 		originalData2,
 		MinMaxTotal = 0,
@@ -42,7 +42,7 @@ d3.clusterpuritychart = function(){
 		totalCount = 0,
 		colorMap = {};
 
-	var custLayout = d3.custumPieLayout()
+	var custLayout = custumPieLayout()
 						.sort(null)
 						.value(function(d) {				    	
 			    			return d.n; 
@@ -86,7 +86,7 @@ d3.clusterpuritychart = function(){
 
 						MinMaxTotal = radiusScale.domain();
 
-						container.attr('width',(circleR*eleInRow+0.5*circleR)+200)
+						container.attr('width',(circleR*eleInRow+0.5*circleR)+400)
 								.attr('height',circleR*eleInRow + margin.top)
 						
 						if(!ParentG){
@@ -172,7 +172,7 @@ d3.clusterpuritychart = function(){
 							circleG.each(chart.renderPieChart);
 
 				})
-		//d3.select(window).on('resize.'+containerID, chart.resize)
+		d3.select(window).on('resize.'+containerID, chart.resize)
 	};
 
 	chart.containerID = function(_){
@@ -270,7 +270,7 @@ d3.clusterpuritychart = function(){
 	return chart;
 };
 
-d3.custumPieLayout = function(){
+custumPieLayout = function(){
 	var sort,fixAngle,
 		valueFun,
 		sortcomparator,
@@ -326,7 +326,7 @@ d3.custumPieLayout = function(){
 	return layout;
 };
 
- d3.legend = function () {
+ legend = function () {
 
         var legendOnclickMthod,
             legendOnHoverMthod,
@@ -347,7 +347,6 @@ d3.custumPieLayout = function(){
                 var g = wrap.select('g')
                 			.attr('transform','translate(10,30)');
 
-                	wrapEnter.append('text').attr('x',0).attr('y',0).text('Interactive legend')
                 var g_ci = g.selectAll('circle')
                     .data(function(d){  
                     	return Object.keys(d)

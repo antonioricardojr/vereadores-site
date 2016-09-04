@@ -33,7 +33,7 @@ var format = d3.time.format("%Y-%m-%d");
 var width = document.body.clientWidth - 100 - margin.left - margin.right;
 var height = 300 - margin.top - margin.bottom;
 
-var tooltip = d3.select(".chart")
+var tooltip = d3.select("#stream")
     .append( "div" )
     .attr( "class", "tooltip" )
     .style( "position", "absolute" )
@@ -96,7 +96,7 @@ var zoom = d3.behavior.zoom()
     .scaleExtent([1, 8])
     .on('zoom', zoomed);
 
-var svg = d3.select(".chart").append("svg")
+var svg = d3.select("#stream").append("svg")
             .attr({
                 'version': '1.1',
                 'viewBox': '0 0 ' + svgWidth + ' ' + svgHeight,
