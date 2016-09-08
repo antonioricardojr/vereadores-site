@@ -13,7 +13,7 @@ refazSvg = function() {
     	d3.select("#cluster").selectAll("*").remove();
       
       	//criar filtro
-    	d3.json('sumario.json',function(error,data){
+    	d3.json('http://web.cloud.lsd.ufcg.edu.br:44142/vereadores/ementas/sumario',function(error,data){
 			var quantNos = data[ultimoAFazer][0]["values"].length;
 			obj = clusterchart().containerID('cluster').noOfCategories(quantNos);
 			d3.select('#cluster').append('svg').datum(data[ultimoAFazer]).call(obj);
